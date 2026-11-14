@@ -25,6 +25,8 @@ import { Route as AuthenticatedTokoRouteImport } from './routes/_authenticated/t
 import { Route as ProdukIdRouteImport } from './routes/produk/$id'
 import { Route as UmkmIndexRouteImport } from './routes/umkm/index'
 import { Route as UmkmIdRouteImport } from './routes/umkm/$id'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminLaporanRouteImport } from './routes/_authenticated/admin.laporan'
 import { Route as AuthenticatedTokoIndexRouteImport } from './routes/_authenticated/toko.index'
 import { Route as AuthenticatedTokoPengaturanRouteImport } from './routes/_authenticated/toko.pengaturan'
 import { Route as AuthenticatedTokoProdukRouteImport } from './routes/_authenticated/toko.produk'
@@ -109,6 +111,17 @@ const UmkmIdRoute = UmkmIdRouteImport.update({
   path: '/umkm/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminLaporanRoute =
+  AuthenticatedAdminLaporanRouteImport.update({
+    id: '/laporan',
+    path: '/laporan',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedTokoIndexRoute = AuthenticatedTokoIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -141,15 +154,17 @@ export interface FileRoutesByFullPath {
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/toko': typeof AuthenticatedTokoRouteWithChildren
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
   '/umkm/': typeof UmkmIndexRoute
+  '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/toko/pengaturan': typeof AuthenticatedTokoPengaturanRoute
   '/toko/produk': typeof AuthenticatedTokoProdukRoute
   '/toko/profil': typeof AuthenticatedTokoProfilRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/toko/': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRoutesByTo {
@@ -162,14 +177,15 @@ export interface FileRoutesByTo {
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
   '/umkm': typeof UmkmIndexRoute
+  '/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/toko/pengaturan': typeof AuthenticatedTokoPengaturanRoute
   '/toko/produk': typeof AuthenticatedTokoProdukRoute
   '/toko/profil': typeof AuthenticatedTokoProfilRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/toko': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRoutesById {
@@ -184,15 +200,17 @@ export interface FileRoutesById {
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/toko': typeof AuthenticatedTokoRouteWithChildren
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
   '/umkm/': typeof UmkmIndexRoute
+  '/_authenticated/admin/laporan': typeof AuthenticatedAdminLaporanRoute
   '/_authenticated/toko/pengaturan': typeof AuthenticatedTokoPengaturanRoute
   '/_authenticated/toko/produk': typeof AuthenticatedTokoProdukRoute
   '/_authenticated/toko/profil': typeof AuthenticatedTokoProfilRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/toko/': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRouteTypes {
@@ -213,9 +231,11 @@ export interface FileRouteTypes {
     | '/produk/$id'
     | '/umkm/$id'
     | '/umkm/'
+    | '/admin/laporan'
     | '/toko/pengaturan'
     | '/toko/produk'
     | '/toko/profil'
+    | '/admin/'
     | '/toko/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -228,14 +248,15 @@ export interface FileRouteTypes {
     | '/peta'
     | '/reset-password'
     | '/tentang'
-    | '/admin'
     | '/dashboard'
     | '/produk/$id'
     | '/umkm/$id'
     | '/umkm'
+    | '/admin/laporan'
     | '/toko/pengaturan'
     | '/toko/produk'
     | '/toko/profil'
+    | '/admin'
     | '/toko'
   id:
     | '__root__'
@@ -255,9 +276,11 @@ export interface FileRouteTypes {
     | '/produk/$id'
     | '/umkm/$id'
     | '/umkm/'
+    | '/_authenticated/admin/laporan'
     | '/_authenticated/toko/pengaturan'
     | '/_authenticated/toko/produk'
     | '/_authenticated/toko/profil'
+    | '/_authenticated/admin/'
     | '/_authenticated/toko/'
   fileRoutesById: FileRoutesById
 }
@@ -391,6 +414,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UmkmIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/laporan': {
+      id: '/_authenticated/admin/laporan'
+      path: '/laporan'
+      fullPath: '/admin/laporan'
+      preLoaderRoute: typeof AuthenticatedAdminLaporanRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/toko/': {
       id: '/_authenticated/toko/'
       path: '/'
@@ -422,6 +459,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminLaporanRoute: typeof AuthenticatedAdminLaporanRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminLaporanRoute: AuthenticatedAdminLaporanRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedTokoRouteChildren {
   AuthenticatedTokoPengaturanRoute: typeof AuthenticatedTokoPengaturanRoute
   AuthenticatedTokoProdukRoute: typeof AuthenticatedTokoProdukRoute
@@ -440,13 +490,13 @@ const AuthenticatedTokoRouteWithChildren =
   AuthenticatedTokoRoute._addFileChildren(AuthenticatedTokoRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedTokoRoute: typeof AuthenticatedTokoRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedTokoRoute: AuthenticatedTokoRouteWithChildren,
 }

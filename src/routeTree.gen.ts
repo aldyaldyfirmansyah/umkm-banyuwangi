@@ -24,6 +24,9 @@ import { Route as ProdukIdRouteImport } from './routes/produk/$id'
 import { Route as UmkmIndexRouteImport } from './routes/umkm/index'
 import { Route as UmkmIdRouteImport } from './routes/umkm/$id'
 import { Route as AuthenticatedTokoIndexRouteImport } from './routes/_authenticated/toko.index'
+import { Route as AuthenticatedTokoPengaturanRouteImport } from './routes/_authenticated/toko.pengaturan'
+import { Route as AuthenticatedTokoProdukRouteImport } from './routes/_authenticated/toko.produk'
+import { Route as AuthenticatedTokoProfilRouteImport } from './routes/_authenticated/toko.profil'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -99,6 +102,22 @@ const AuthenticatedTokoIndexRoute = AuthenticatedTokoIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedTokoRoute,
 } as any)
+const AuthenticatedTokoPengaturanRoute =
+  AuthenticatedTokoPengaturanRouteImport.update({
+    id: '/pengaturan',
+    path: '/pengaturan',
+    getParentRoute: () => AuthenticatedTokoRoute,
+  } as any)
+const AuthenticatedTokoProdukRoute = AuthenticatedTokoProdukRouteImport.update({
+  id: '/produk',
+  path: '/produk',
+  getParentRoute: () => AuthenticatedTokoRoute,
+} as any)
+const AuthenticatedTokoProfilRoute = AuthenticatedTokoProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => AuthenticatedTokoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -114,6 +133,9 @@ export interface FileRoutesByFullPath {
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
   '/umkm/': typeof UmkmIndexRoute
+  '/toko/pengaturan': typeof AuthenticatedTokoPengaturanRoute
+  '/toko/produk': typeof AuthenticatedTokoProdukRoute
+  '/toko/profil': typeof AuthenticatedTokoProfilRoute
   '/toko/': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRoutesByTo {
@@ -129,6 +151,9 @@ export interface FileRoutesByTo {
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
   '/umkm': typeof UmkmIndexRoute
+  '/toko/pengaturan': typeof AuthenticatedTokoPengaturanRoute
+  '/toko/produk': typeof AuthenticatedTokoProdukRoute
+  '/toko/profil': typeof AuthenticatedTokoProfilRoute
   '/toko': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRoutesById {
@@ -147,6 +172,9 @@ export interface FileRoutesById {
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
   '/umkm/': typeof UmkmIndexRoute
+  '/_authenticated/toko/pengaturan': typeof AuthenticatedTokoPengaturanRoute
+  '/_authenticated/toko/produk': typeof AuthenticatedTokoProdukRoute
+  '/_authenticated/toko/profil': typeof AuthenticatedTokoProfilRoute
   '/_authenticated/toko/': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRouteTypes {
@@ -165,6 +193,9 @@ export interface FileRouteTypes {
     | '/produk/$id'
     | '/umkm/$id'
     | '/umkm/'
+    | '/toko/pengaturan'
+    | '/toko/produk'
+    | '/toko/profil'
     | '/toko/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -180,6 +211,9 @@ export interface FileRouteTypes {
     | '/produk/$id'
     | '/umkm/$id'
     | '/umkm'
+    | '/toko/pengaturan'
+    | '/toko/produk'
+    | '/toko/profil'
     | '/toko'
   id:
     | '__root__'
@@ -197,6 +231,9 @@ export interface FileRouteTypes {
     | '/produk/$id'
     | '/umkm/$id'
     | '/umkm/'
+    | '/_authenticated/toko/pengaturan'
+    | '/_authenticated/toko/produk'
+    | '/_authenticated/toko/profil'
     | '/_authenticated/toko/'
   fileRoutesById: FileRoutesById
 }
@@ -323,14 +360,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTokoIndexRouteImport
       parentRoute: typeof AuthenticatedTokoRoute
     }
+    '/_authenticated/toko/pengaturan': {
+      id: '/_authenticated/toko/pengaturan'
+      path: '/pengaturan'
+      fullPath: '/toko/pengaturan'
+      preLoaderRoute: typeof AuthenticatedTokoPengaturanRouteImport
+      parentRoute: typeof AuthenticatedTokoRoute
+    }
+    '/_authenticated/toko/produk': {
+      id: '/_authenticated/toko/produk'
+      path: '/produk'
+      fullPath: '/toko/produk'
+      preLoaderRoute: typeof AuthenticatedTokoProdukRouteImport
+      parentRoute: typeof AuthenticatedTokoRoute
+    }
+    '/_authenticated/toko/profil': {
+      id: '/_authenticated/toko/profil'
+      path: '/profil'
+      fullPath: '/toko/profil'
+      preLoaderRoute: typeof AuthenticatedTokoProfilRouteImport
+      parentRoute: typeof AuthenticatedTokoRoute
+    }
   }
 }
 
 interface AuthenticatedTokoRouteChildren {
+  AuthenticatedTokoPengaturanRoute: typeof AuthenticatedTokoPengaturanRoute
+  AuthenticatedTokoProdukRoute: typeof AuthenticatedTokoProdukRoute
+  AuthenticatedTokoProfilRoute: typeof AuthenticatedTokoProfilRoute
   AuthenticatedTokoIndexRoute: typeof AuthenticatedTokoIndexRoute
 }
 
 const AuthenticatedTokoRouteChildren: AuthenticatedTokoRouteChildren = {
+  AuthenticatedTokoPengaturanRoute: AuthenticatedTokoPengaturanRoute,
+  AuthenticatedTokoProdukRoute: AuthenticatedTokoProdukRoute,
+  AuthenticatedTokoProfilRoute: AuthenticatedTokoProfilRoute,
   AuthenticatedTokoIndexRoute: AuthenticatedTokoIndexRoute,
 }
 

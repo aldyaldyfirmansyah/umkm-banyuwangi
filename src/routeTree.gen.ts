@@ -10,33 +10,210 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as KatalogRouteImport } from './routes/katalog'
+import { Route as KategoriRouteImport } from './routes/kategori'
+import { Route as KontakRouteImport } from './routes/kontak'
+import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
+import { Route as PetaRouteImport } from './routes/peta'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as TentangRouteImport } from './routes/tentang'
+import { Route as AuthenticatedTokoRouteImport } from './routes/_authenticated/toko'
+import { Route as ProdukIdRouteImport } from './routes/produk/$id'
+import { Route as UmkmIndexRouteImport } from './routes/umkm/index'
+import { Route as UmkmIdRouteImport } from './routes/umkm/$id'
+import { Route as AuthenticatedTokoIndexRouteImport } from './routes/_authenticated/toko.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KatalogRoute = KatalogRouteImport.update({
+  id: '/katalog',
+  path: '/katalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KategoriRoute = KategoriRouteImport.update({
+  id: '/kategori',
+  path: '/kategori',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KontakRoute = KontakRouteImport.update({
+  id: '/kontak',
+  path: '/kontak',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LupaPasswordRoute = LupaPasswordRouteImport.update({
+  id: '/lupa-password',
+  path: '/lupa-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PetaRoute = PetaRouteImport.update({
+  id: '/peta',
+  path: '/peta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TentangRoute = TentangRouteImport.update({
+  id: '/tentang',
+  path: '/tentang',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedTokoRoute = AuthenticatedTokoRouteImport.update({
+  id: '/toko',
+  path: '/toko',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ProdukIdRoute = ProdukIdRouteImport.update({
+  id: '/produk/$id',
+  path: '/produk/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UmkmIndexRoute = UmkmIndexRouteImport.update({
+  id: '/umkm/',
+  path: '/umkm/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UmkmIdRoute = UmkmIdRouteImport.update({
+  id: '/umkm/$id',
+  path: '/umkm/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedTokoIndexRoute = AuthenticatedTokoIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedTokoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/katalog': typeof KatalogRoute
+  '/kategori': typeof KategoriRoute
+  '/kontak': typeof KontakRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/peta': typeof PetaRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/tentang': typeof TentangRoute
+  '/toko': typeof AuthenticatedTokoRouteWithChildren
+  '/produk/$id': typeof ProdukIdRoute
+  '/umkm/$id': typeof UmkmIdRoute
+  '/umkm/': typeof UmkmIndexRoute
+  '/toko/': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/katalog': typeof KatalogRoute
+  '/kategori': typeof KategoriRoute
+  '/kontak': typeof KontakRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/peta': typeof PetaRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/tentang': typeof TentangRoute
+  '/produk/$id': typeof ProdukIdRoute
+  '/umkm/$id': typeof UmkmIdRoute
+  '/umkm': typeof UmkmIndexRoute
+  '/toko': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/katalog': typeof KatalogRoute
+  '/kategori': typeof KategoriRoute
+  '/kontak': typeof KontakRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/peta': typeof PetaRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/tentang': typeof TentangRoute
+  '/_authenticated/toko': typeof AuthenticatedTokoRouteWithChildren
+  '/produk/$id': typeof ProdukIdRoute
+  '/umkm/$id': typeof UmkmIdRoute
+  '/umkm/': typeof UmkmIndexRoute
+  '/_authenticated/toko/': typeof AuthenticatedTokoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/katalog'
+    | '/kategori'
+    | '/kontak'
+    | '/lupa-password'
+    | '/peta'
+    | '/reset-password'
+    | '/tentang'
+    | '/toko'
+    | '/produk/$id'
+    | '/umkm/$id'
+    | '/umkm/'
+    | '/toko/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/katalog'
+    | '/kategori'
+    | '/kontak'
+    | '/lupa-password'
+    | '/peta'
+    | '/reset-password'
+    | '/tentang'
+    | '/produk/$id'
+    | '/umkm/$id'
+    | '/umkm'
+    | '/toko'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/katalog'
+    | '/kategori'
+    | '/kontak'
+    | '/lupa-password'
+    | '/peta'
+    | '/reset-password'
+    | '/tentang'
+    | '/_authenticated/toko'
+    | '/produk/$id'
+    | '/umkm/$id'
+    | '/umkm/'
+    | '/_authenticated/toko/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  KatalogRoute: typeof KatalogRoute
+  KategoriRoute: typeof KategoriRoute
+  KontakRoute: typeof KontakRoute
+  LupaPasswordRoute: typeof LupaPasswordRoute
+  PetaRoute: typeof PetaRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  TentangRoute: typeof TentangRoute
+  ProdukIdRoute: typeof ProdukIdRoute
+  UmkmIdRoute: typeof UmkmIdRoute
+  UmkmIndexRoute: typeof UmkmIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +225,143 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/katalog': {
+      id: '/katalog'
+      path: '/katalog'
+      fullPath: '/katalog'
+      preLoaderRoute: typeof KatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kategori': {
+      id: '/kategori'
+      path: '/kategori'
+      fullPath: '/kategori'
+      preLoaderRoute: typeof KategoriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kontak': {
+      id: '/kontak'
+      path: '/kontak'
+      fullPath: '/kontak'
+      preLoaderRoute: typeof KontakRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lupa-password': {
+      id: '/lupa-password'
+      path: '/lupa-password'
+      fullPath: '/lupa-password'
+      preLoaderRoute: typeof LupaPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/peta': {
+      id: '/peta'
+      path: '/peta'
+      fullPath: '/peta'
+      preLoaderRoute: typeof PetaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tentang': {
+      id: '/tentang'
+      path: '/tentang'
+      fullPath: '/tentang'
+      preLoaderRoute: typeof TentangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/toko': {
+      id: '/_authenticated/toko'
+      path: '/toko'
+      fullPath: '/toko'
+      preLoaderRoute: typeof AuthenticatedTokoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/produk/$id': {
+      id: '/produk/$id'
+      path: '/produk/$id'
+      fullPath: '/produk/$id'
+      preLoaderRoute: typeof ProdukIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/umkm/': {
+      id: '/umkm/'
+      path: '/umkm'
+      fullPath: '/umkm/'
+      preLoaderRoute: typeof UmkmIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/umkm/$id': {
+      id: '/umkm/$id'
+      path: '/umkm/$id'
+      fullPath: '/umkm/$id'
+      preLoaderRoute: typeof UmkmIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/toko/': {
+      id: '/_authenticated/toko/'
+      path: '/'
+      fullPath: '/toko/'
+      preLoaderRoute: typeof AuthenticatedTokoIndexRouteImport
+      parentRoute: typeof AuthenticatedTokoRoute
+    }
   }
 }
 
+interface AuthenticatedTokoRouteChildren {
+  AuthenticatedTokoIndexRoute: typeof AuthenticatedTokoIndexRoute
+}
+
+const AuthenticatedTokoRouteChildren: AuthenticatedTokoRouteChildren = {
+  AuthenticatedTokoIndexRoute: AuthenticatedTokoIndexRoute,
+}
+
+const AuthenticatedTokoRouteWithChildren =
+  AuthenticatedTokoRoute._addFileChildren(AuthenticatedTokoRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedTokoRoute: typeof AuthenticatedTokoRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedTokoRoute: AuthenticatedTokoRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  KatalogRoute: KatalogRoute,
+  KategoriRoute: KategoriRoute,
+  KontakRoute: KontakRoute,
+  LupaPasswordRoute: LupaPasswordRoute,
+  PetaRoute: PetaRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  TentangRoute: TentangRoute,
+  ProdukIdRoute: ProdukIdRoute,
+  UmkmIdRoute: UmkmIdRoute,
+  UmkmIndexRoute: UmkmIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

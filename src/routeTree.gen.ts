@@ -19,6 +19,8 @@ import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
 import { Route as PetaRouteImport } from './routes/peta'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TentangRouteImport } from './routes/tentang'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedTokoRouteImport } from './routes/_authenticated/toko'
 import { Route as ProdukIdRouteImport } from './routes/produk/$id'
 import { Route as UmkmIndexRouteImport } from './routes/umkm/index'
@@ -77,6 +79,16 @@ const TentangRoute = TentangRouteImport.update({
   path: '/tentang',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTokoRoute = AuthenticatedTokoRouteImport.update({
   id: '/toko',
   path: '/toko',
@@ -129,6 +141,8 @@ export interface FileRoutesByFullPath {
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/toko': typeof AuthenticatedTokoRouteWithChildren
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
@@ -148,6 +162,8 @@ export interface FileRoutesByTo {
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
   '/umkm': typeof UmkmIndexRoute
@@ -168,6 +184,8 @@ export interface FileRoutesById {
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/toko': typeof AuthenticatedTokoRouteWithChildren
   '/produk/$id': typeof ProdukIdRoute
   '/umkm/$id': typeof UmkmIdRoute
@@ -189,6 +207,8 @@ export interface FileRouteTypes {
     | '/peta'
     | '/reset-password'
     | '/tentang'
+    | '/admin'
+    | '/dashboard'
     | '/toko'
     | '/produk/$id'
     | '/umkm/$id'
@@ -208,6 +228,8 @@ export interface FileRouteTypes {
     | '/peta'
     | '/reset-password'
     | '/tentang'
+    | '/admin'
+    | '/dashboard'
     | '/produk/$id'
     | '/umkm/$id'
     | '/umkm'
@@ -227,6 +249,8 @@ export interface FileRouteTypes {
     | '/peta'
     | '/reset-password'
     | '/tentang'
+    | '/_authenticated/admin'
+    | '/_authenticated/dashboard'
     | '/_authenticated/toko'
     | '/produk/$id'
     | '/umkm/$id'
@@ -325,6 +349,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TentangRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/toko': {
       id: '/_authenticated/toko'
       path: '/toko'
@@ -402,10 +440,14 @@ const AuthenticatedTokoRouteWithChildren =
   AuthenticatedTokoRoute._addFileChildren(AuthenticatedTokoRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedTokoRoute: typeof AuthenticatedTokoRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedTokoRoute: AuthenticatedTokoRouteWithChildren,
 }
 

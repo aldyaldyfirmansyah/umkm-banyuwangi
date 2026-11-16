@@ -3,6 +3,7 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
+  redirect,
   useRouter,
   useRouterState,
   HeadContent,
@@ -17,6 +18,7 @@ import { AuthProvider } from "@/hooks/use-auth";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -79,6 +81,14 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: async ({ location }) => {
+    const publicPaths = ["/auth", "/login", "/lupa-password", "/reset-password"];
+    if (publicPaths.some((path) => location.pathname === path || location.pathname.startsWith(`${path}/`))) return;
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) {
+      throw redirect({ to: "/auth", search: { mode: "login", redirect: location.href } });
+    }
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },

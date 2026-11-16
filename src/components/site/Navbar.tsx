@@ -1,8 +1,7 @@
-import { useState, type MouseEvent } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { LayoutDashboard, LogOut, Menu, ShieldCheck, Store, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,13 +30,6 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const name = (user?.user_metadata?.full_name as string) || user?.email || "";
-  const openProtectedPage = (event: MouseEvent) => {
-    if (ready && user) return;
-    event.preventDefault();
-    toast.error("Silakan masuk terlebih dahulu untuk mengakses halaman ini.");
-    navigate({ to: "/auth", search: { mode: "login" } });
-  };
-
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur-md">
       <div className="container-page flex h-16 items-center justify-between gap-4">
@@ -48,7 +40,7 @@ export function Navbar() {
               key={item.to}
               to={item.to}
               activeOptions={{ exact: item.to === "/" }}
-              onClick={openProtectedPage}
+              onClick={undefined}
               className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary data-[status=active]:bg-primary-soft data-[status=active]:text-primary-deep"
             >
               {item.label}
@@ -118,7 +110,7 @@ export function Navbar() {
                   <Link
                     key={item.to}
                     to={item.to}
-                    onClick={(event) => { setOpen(false); if (item.to !== "/") openProtectedPage(event); }}
+                    onClick={() => setOpen(false)}
                     activeOptions={{ exact: item.to === "/" }}
                     className="rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted data-[status=active]:bg-primary-soft data-[status=active]:text-primary-deep"
                   >

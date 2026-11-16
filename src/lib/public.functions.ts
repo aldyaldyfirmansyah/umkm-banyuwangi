@@ -66,7 +66,7 @@ export const getCategories = createServerFn({ method: "GET" }).handler(async () 
     sb.from("categories").select("id, name, slug, description, icon").order("sort_order"),
     sb.from("products").select("category_id"),
   ]);
-  if (error) throw new Error(error.message);
+  if (error) return [];
   const counts = new Map<string, number>();
   for (const p of prods ?? []) if (p.category_id) counts.set(p.category_id, (counts.get(p.category_id) ?? 0) + 1);
   return (cats ?? []).map((c) => ({ ...c, product_count: counts.get(c.id) ?? 0 }));
@@ -131,7 +131,7 @@ export type CatalogSearch = {
 export const PAGE_SIZE = 12;
 
 export const searchProducts = createServerFn({ method: "GET" })
-  .inputValidator((input: CatalogSearch) => input)
+  .validator((input: CatalogSearch) => input)
   .handler(async ({ data }) => {
     const sb = publicClient();
     let categoryId: string | null = null;
@@ -172,7 +172,7 @@ export const searchProducts = createServerFn({ method: "GET" })
   });
 
 export const getProduct = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: string }) => input)
+  .validator((input: { id: string }) => input)
   .handler(async ({ data }) => {
     const sb = publicClient();
     if (!/^[0-9a-f-]{36}$/i.test(data.id)) return null;
@@ -195,7 +195,7 @@ export const getProduct = createServerFn({ method: "GET" })
 export type DirectorySearch = { q?: string; kec?: string; kategori?: string; status?: "terverifikasi"; urut?: "terbaru" | "nama" };
 
 export const listUmkm = createServerFn({ method: "GET" })
-  .inputValidator((input: DirectorySearch) => input)
+  .validator((input: DirectorySearch) => input)
   .handler(async ({ data }) => {
     const sb = publicClient();
     let query = sb.from("umkm").select(STORE_CARD_SELECT);
@@ -218,7 +218,7 @@ export const listUmkm = createServerFn({ method: "GET" })
   });
 
 export const getUmkm = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: string }) => input)
+  .validator((input: { id: string }) => input)
   .handler(async ({ data }) => {
     const sb = publicClient();
     if (!/^[0-9a-f-]{36}$/i.test(data.id)) return null;

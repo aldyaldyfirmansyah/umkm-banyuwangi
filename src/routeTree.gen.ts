@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as KatalogRouteImport } from './routes/katalog'
 import { Route as KategoriRouteImport } from './routes/kategori'
 import { Route as KontakRouteImport } from './routes/kontak'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
 import { Route as PetaRouteImport } from './routes/peta'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -59,6 +60,11 @@ const KategoriRoute = KategoriRouteImport.update({
 const KontakRoute = KontakRouteImport.update({
   id: '/kontak',
   path: '/kontak',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LupaPasswordRoute = LupaPasswordRouteImport.update({
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/katalog': typeof KatalogRoute
   '/kategori': typeof KategoriRoute
   '/kontak': typeof KontakRoute
+  '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/katalog': typeof KatalogRoute
   '/kategori': typeof KategoriRoute
   '/kontak': typeof KontakRoute
+  '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -196,6 +204,7 @@ export interface FileRoutesById {
   '/katalog': typeof KatalogRoute
   '/kategori': typeof KategoriRoute
   '/kontak': typeof KontakRoute
+  '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -221,6 +230,7 @@ export interface FileRouteTypes {
     | '/katalog'
     | '/kategori'
     | '/kontak'
+    | '/login'
     | '/lupa-password'
     | '/peta'
     | '/reset-password'
@@ -244,6 +254,7 @@ export interface FileRouteTypes {
     | '/katalog'
     | '/kategori'
     | '/kontak'
+    | '/login'
     | '/lupa-password'
     | '/peta'
     | '/reset-password'
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | '/katalog'
     | '/kategori'
     | '/kontak'
+    | '/login'
     | '/lupa-password'
     | '/peta'
     | '/reset-password'
@@ -291,6 +303,7 @@ export interface RootRouteChildren {
   KatalogRoute: typeof KatalogRoute
   KategoriRoute: typeof KategoriRoute
   KontakRoute: typeof KontakRoute
+  LoginRoute: typeof LoginRoute
   LupaPasswordRoute: typeof LupaPasswordRoute
   PetaRoute: typeof PetaRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       path: '/kontak'
       fullPath: '/kontak'
       preLoaderRoute: typeof KontakRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lupa-password': {
@@ -511,6 +531,7 @@ const rootRouteChildren: RootRouteChildren = {
   KatalogRoute: KatalogRoute,
   KategoriRoute: KategoriRoute,
   KontakRoute: KontakRoute,
+  LoginRoute: LoginRoute,
   LupaPasswordRoute: LupaPasswordRoute,
   PetaRoute: PetaRoute,
   ResetPasswordRoute: ResetPasswordRoute,

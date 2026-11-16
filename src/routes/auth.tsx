@@ -48,7 +48,7 @@ const registerSchema = z
     accountType: z.enum(["umkm", "user"]),
     fullName: z.string().trim().min(2, "Nama minimal 2 karakter").max(100),
     email: z.string().trim().email("Format email tidak valid").max(255),
-    phone: z.string().trim().regex(/^(\+62|62|0)8[0-9]{7,12}$/, "Nomor WhatsApp tidak valid (contoh: 081234567890)"),
+    phone: z.string().trim().regex(/^(\+62|62|0)8[0-9]{7,12}$/, "Nomor WhatsApp tidak valid (contoh: 081234567890)").optional(),
     businessName: z.string().trim().max(100).optional(),
     categoryId: z.string().optional(),
     description: z.string().trim().max(1000, "Deskripsi maksimal 1000 karakter").optional(),
@@ -64,6 +64,7 @@ const registerSchema = z
   .refine((d) => d.accountType !== "umkm" || (d.description && d.description.length >= 20), { path: ["description"], message: "Deskripsi usaha minimal 20 karakter" })
   .refine((d) => d.accountType !== "umkm" || (d.fullAddress && d.fullAddress.length >= 10), { path: ["fullAddress"], message: "Alamat lengkap minimal 10 karakter" })
   .refine((d) => d.accountType !== "umkm" || !!d.districtId, { path: ["districtId"], message: "Pilih kecamatan di Kabupaten Banyuwangi" })
+  .refine((d) => d.accountType !== "umkm" || !!d.phone, { path: ["phone"], message: "Nomor WhatsApp wajib diisi" })
   .refine((d) => d.accountType !== "umkm" || (d.village && d.village.length >= 3), { path: ["village"], message: "Desa/kelurahan wajib diisi" });
 
 function FieldError({ msg }: { msg?: string }) {
@@ -182,7 +183,7 @@ function LoginForm({ onDone }: { onDone: () => void }) {
 }
 
 function RegisterForm() {
-  const [form, setForm] = useState({ accountType: "umkm" as "umkm" | "user", fullName: "", email: "", phone: "", businessName: "", categoryId: "", description: "", fullAddress: "", districtId: "", village: "", password: "", confirm: "" });
+  const [form, setForm] = useState({ accountType: "user" as "umkm" | "user", fullName: "", email: "", phone: "", businessName: "", categoryId: "", description: "", fullAddress: "", districtId: "", village: "", password: "", confirm: "" });
   const { data: districts = [] } = useQuery(districtsQuery());
   const { data: categories = [] } = useQuery(categoriesQuery());
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -251,8 +252,8 @@ function RegisterForm() {
     <form onSubmit={submit} noValidate className="space-y-4">
       <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Jenis akun">
         {([
-          { v: "umkm", label: "Pelaku UMKM", icon: Store },
-          { v: "user", label: "Pembeli", icon: ShoppingBag },
+          { v: "user", label: "Daftar Akun", icon: ShoppingBag },
+          { v: "umkm", label: "Daftar UMKM", icon: Store },
         ] as const).map((o) => (
           <button
             key={o.v}
@@ -298,7 +299,7 @@ function RegisterForm() {
       )}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5"><Label htmlFor="r-email">Email</Label><Input id="r-email" type="email" value={form.email} onChange={set("email")} autoComplete="email" aria-invalid={!!errors.email} /><FieldError msg={errors.email} /></div>
-        <div className="space-y-1.5"><Label htmlFor="r-phone">No. WhatsApp</Label><Input id="r-phone" inputMode="tel" placeholder="0812xxxxxxx" value={form.phone} onChange={set("phone")} aria-invalid={!!errors.phone} /><FieldError msg={errors.phone} /></div>
+        {form.accountType === "umkm" && <div className="space-y-1.5"><Label htmlFor="r-phone">No. WhatsApp</Label><Input id="r-phone" inputMode="tel" placeholder="0812xxxxxxx" value={form.phone} onChange={set("phone")} aria-invalid={!!errors.phone} /><FieldError msg={errors.phone} /></div>}
       </div>
       <div className="space-y-1.5"><Label htmlFor="r-pass">Password</Label><PasswordInput id="r-pass" value={form.password} onChange={(v) => setForm((f) => ({ ...f, password: v }))} invalid={!!errors.password} autoComplete="new-password" /><FieldError msg={errors.password} /></div>
       <div className="space-y-1.5"><Label htmlFor="r-confirm">Konfirmasi password</Label><PasswordInput id="r-confirm" value={form.confirm} onChange={(v) => setForm((f) => ({ ...f, confirm: v }))} invalid={!!errors.confirm} autoComplete="new-password" /><FieldError msg={errors.confirm} /></div>

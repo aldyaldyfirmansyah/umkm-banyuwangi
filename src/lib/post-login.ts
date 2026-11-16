@@ -14,11 +14,16 @@ export function safeRedirect(value: string | undefined | null): string | null {
 }
 
 export async function homeForCurrentUser(): Promise<"/admin" | "/toko" | "/dashboard"> {
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return "/dashboard";
-  const { data } = await supabase.from("user_roles").select("role").eq("user_id", auth.user.id);
-  const roles = (data ?? []).map((r) => r.role);
-  if (roles.includes("admin")) return "/admin";
-  if (roles.includes("umkm")) return "/toko";
+  try {
+    const { data: auth } = await supabase.auth.getUser();
+    if (!auth.user) return "/dashboard";
+    const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", auth.user.id);
+    if (error) return "/dashboard";
+    const roles = (data ?? []).map((r) => r.role);
+    if (roles.includes("admin")) return "/admin";
+    if (roles.includes("umkm")) return "/toko";
+  } catch {
+    return "/dashboard";
+  }
   return "/dashboard";
 }

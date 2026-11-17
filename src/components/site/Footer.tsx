@@ -46,7 +46,7 @@ export function Footer() {
       </div>
       <div className="border-t">
         <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-muted-foreground sm:flex-row">
-          <p>© {new Date().getFullYear()} {s?.site_name ?? "UMKM BANYUWANGI"}. Hak cipta dilindungi.</p>
+          <p>© {new Date().getFullYear()} ALDY FIRMANSYAH. Hak cipta dilindungi.</p>
           <p>Bangga produk Banyuwangi — Kabupaten Banyuwangi, Jawa Timur</p>
         </div>
       </div>

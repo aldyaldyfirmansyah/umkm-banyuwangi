@@ -1,7 +1,7 @@
-import { lazy, Suspense, useMemo } from "react";
+import { lazy, Suspense, useMemo, useState, type FormEvent } from "react";
 import { ClientOnly, createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { MapPin, Store } from "lucide-react";
+import { MapPin, Search, Store } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageHero } from "@/components/site/SectionHeading";
 import { EmptyState } from "@/components/site/EmptyState";
@@ -10,10 +10,13 @@ import { escapeHtml } from "@/lib/html";
 
 const LeafletMap = lazy(() => import("@/components/site/LeafletMap"));
 
-type S = { kec?: string };
+type S = { kec?: string; q?: string };
 
 export const Route = createFileRoute("/peta")({
-  validateSearch: (s: Record<string, unknown>): S => ({ kec: typeof s.kec === "string" && s.kec ? s.kec : undefined }),
+  validateSearch: (s: Record<string, unknown>): S => ({
+    kec: typeof s.kec === "string" && s.kec ? s.kec : undefined,
+    q: typeof s.q === "string" && s.q ? s.q : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Peta Persebaran UMKM Banyuwangi — UMKM BANYUWANGI" },
@@ -42,8 +45,21 @@ function PetaPage() {
   const navigate = useNavigate({ from: "/peta" });
   const { data: points } = useSuspenseQuery(mapPointsQuery());
   const { data: districts } = useSuspenseQuery(districtsQuery());
+  const [query, setQuery] = useState(search.q ?? "");
   const district = districts.find((d) => d.slug === search.kec);
-  const visible = useMemo(() => (search.kec ? points.filter((p) => p.districtSlug === search.kec) : points), [points, search.kec]);
+  const visible = useMemo(() => {
+    const keyword = (search.q ?? "").toLowerCase();
+    return points.filter((p) => {
+      const matchesDistrict = !search.kec || p.districtSlug === search.kec;
+      const matchesQuery = !keyword || [p.name, p.category, p.district, p.address].some((value) => value.toLowerCase().includes(keyword));
+      return matchesDistrict && matchesQuery;
+    });
+  }, [points, search.kec, search.q]);
+
+  function submitSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    navigate({ search: { kec: search.kec, q: query.trim() || undefined } });
+  }
   const markers = useMemo(
     () =>
       visible.map((p) => ({
@@ -59,7 +75,13 @@ function PetaPage() {
   return (
     <>
       <PageHero eyebrow="Peta" title="Peta Persebaran UMKM" description="Titik lokasi diambil dari data UMKM yang telah diverifikasi admin. Klik titik untuk melihat detail.">
-        <div className="mt-6 max-w-xs">
+        <div className="mt-6 flex max-w-2xl flex-col gap-3 sm:flex-row">
+          <form onSubmit={submitSearch} role="search" className="flex flex-1 items-center gap-2 rounded-xl border bg-card p-1.5 shadow-soft focus-within:border-primary">
+            <Search className="ml-2 size-4 shrink-0 text-muted-foreground" />
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cari nama UMKM, kategori, atau lokasi..." aria-label="Cari UMKM di peta" className="h-9 min-w-0 flex-1 bg-transparent px-1 text-sm outline-none placeholder:text-muted-foreground" />
+            <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">Cari</button>
+          </form>
+          <div className="sm:w-56">
           <Select value={search.kec ?? "all"} onValueChange={(v) => navigate({ search: { kec: v === "all" ? undefined : v } })}>
             <SelectTrigger className="h-11 bg-card" aria-label="Filter kecamatan"><SelectValue placeholder="Semua kecamatan" /></SelectTrigger>
             <SelectContent>
@@ -67,6 +89,7 @@ function PetaPage() {
               {districts.map((d) => <SelectItem key={d.id} value={d.slug}>{d.name}</SelectItem>)}
             </SelectContent>
           </Select>
+          </div>
         </div>
       </PageHero>
       <section className="container-page grid gap-6 py-8 lg:grid-cols-[1fr_320px]">

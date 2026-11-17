@@ -60,6 +60,27 @@ export const getSiteSettings = createServerFn({ method: "GET" }).handler(async (
   return data;
 });
 
+export const getCatalogCategoryCounts = createServerFn({ method: "GET" })
+  .validator((input: { kec?: string }) => input)
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    let districtId: string | undefined;
+    if (data.kec) {
+      const { data: district } = await sb.from("districts").select("id").eq("slug", data.kec).maybeSingle();
+      districtId = district?.id;
+      if (!districtId) return {};
+    }
+    let query = sb.from("products").select("category_id, umkm!inner(district_id)");
+    if (districtId) query = query.eq("umkm.district_id", districtId);
+    const { data: products, error } = await query;
+    if (error) return {};
+    const counts: Record<string, number> = {};
+    for (const product of products ?? []) {
+      if (product.category_id) counts[product.category_id] = (counts[product.category_id] ?? 0) + 1;
+    }
+    return counts;
+  });
+
 export const getCategories = createServerFn({ method: "GET" }).handler(async () => {
   const sb = publicClient();
   const [{ data: cats, error }, { data: prods }] = await Promise.all([

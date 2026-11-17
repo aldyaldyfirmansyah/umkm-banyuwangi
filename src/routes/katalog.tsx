@@ -11,7 +11,7 @@ import { PageHero } from "@/components/site/SectionHeading";
 import { SearchBar } from "@/components/site/SearchBar";
 import { ProductGrid, ProductGridSkeleton } from "@/components/site/ProductCard";
 import { EmptyState } from "@/components/site/EmptyState";
-import { catalogQuery, categoriesQuery, districtsQuery } from "@/lib/queries";
+import { catalogCategoryCountsQuery, catalogQuery, categoriesQuery, districtsQuery } from "@/lib/queries";
 import { PAGE_SIZE, type CatalogSearch } from "@/lib/public.functions";
 
 const SORTS = ["terbaru", "termurah", "termahal", "populer"] as const;
@@ -46,6 +46,7 @@ export const Route = createFileRoute("/katalog")({
     await Promise.all([
       context.queryClient.ensureQueryData(catalogQuery(deps)),
       context.queryClient.ensureQueryData(categoriesQuery()),
+      context.queryClient.ensureQueryData(catalogCategoryCountsQuery(deps.kec)),
       context.queryClient.ensureQueryData(districtsQuery()),
     ]);
   },
@@ -56,6 +57,7 @@ function Filters({ search, onDone }: { search: CatalogSearch; onDone?: () => voi
   const navigate = useNavigate({ from: "/katalog" });
   const { data: categories } = useSuspenseQuery(categoriesQuery());
   const { data: districts } = useSuspenseQuery(districtsQuery());
+  const { data: categoryCounts = {} } = useQuery(catalogCategoryCountsQuery(search.kec));
   const [min, setMin] = useState(search.min?.toString() ?? "");
   const [max, setMax] = useState(search.max?.toString() ?? "");
   const [priceError, setPriceError] = useState<string | null>(null);
@@ -103,7 +105,7 @@ function Filters({ search, onDone }: { search: CatalogSearch; onDone?: () => voi
               className={`flex items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors ${search.kategori === c.slug ? "bg-primary-soft font-semibold text-primary-deep" : "hover:bg-muted"}`}
             >
               <span>{c.name}</span>
-              <span className="text-xs text-muted-foreground">{c.product_count}</span>
+              <span className="text-xs text-muted-foreground">{categoryCounts[c.id] ?? 0}</span>
             </button>
           ))}
         </div>

@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import {
   getCategories,
+  getCatalogCategoryCounts,
   getDistricts,
   getHomeData,
   getMapPoints,
@@ -18,6 +19,9 @@ export const siteSettingsQuery = () =>
 
 export const categoriesQuery = () =>
   queryOptions({ queryKey: ["categories"], queryFn: () => getCategories(), staleTime: 60_000 });
+
+export const catalogCategoryCountsQuery = (kec?: string) =>
+  queryOptions({ queryKey: ["catalog-category-counts", kec], queryFn: () => getCatalogCategoryCounts({ data: { kec } }), staleTime: 15_000 });
 
 export const districtsQuery = () =>
   queryOptions({ queryKey: ["districts"], queryFn: () => getDistricts(), staleTime: 60_000 });

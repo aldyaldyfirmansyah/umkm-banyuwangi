@@ -32,7 +32,7 @@ export function Navbar() {
   const name = (user?.user_metadata?.full_name as string) || user?.email || "";
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur-md">
-      <div className="container-page flex h-16 items-center justify-between gap-4">
+      <div className="container-page flex h-14 items-center justify-between gap-2 sm:h-16 sm:gap-4">
         <Logo />
         <nav className="hidden items-center gap-1 lg:flex">
           {NAV.map((item) => (
@@ -97,11 +97,11 @@ export function Navbar() {
           )}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Buka menu">
+              <Button variant="outline" size="icon" className="size-9 lg:hidden" aria-label="Buka menu">
                 <Menu />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-72">
+            <SheetContent side="right" className="w-[min(86vw,20rem)]">
               <SheetHeader>
                 <SheetTitle className="text-left">Menu</SheetTitle>
               </SheetHeader>

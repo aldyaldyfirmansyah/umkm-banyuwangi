@@ -9,7 +9,7 @@ export function Footer() {
   return (
     <footer className="relative mt-20 border-t bg-cream/60">
       <div className="gajah-oling h-3 w-full opacity-80" aria-hidden />
-      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
+      <div className="container-page grid gap-8 py-10 sm:gap-10 sm:py-14 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <Logo />
           <p className="text-sm leading-relaxed text-muted-foreground">
@@ -45,7 +45,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t">
-        <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-muted-foreground sm:flex-row">
+        <div className="container-page flex flex-col items-center justify-between gap-2 py-4 text-center text-xs text-muted-foreground sm:flex-row sm:py-5 sm:text-left">
           <p>© {new Date().getFullYear()} ALDY FIRMANSYAH. Hak cipta dilindungi.</p>
           <p>Bangga produk Banyuwangi — Kabupaten Banyuwangi, Jawa Timur</p>
         </div>

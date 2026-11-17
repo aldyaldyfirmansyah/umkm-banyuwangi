@@ -75,32 +75,30 @@ function PetaPage() {
   return (
     <>
       <PageHero eyebrow="Peta" title="Peta Persebaran UMKM" description="Titik lokasi diambil dari data UMKM yang telah diverifikasi admin. Klik titik untuk melihat detail.">
-        <div className="mt-6 flex max-w-2xl flex-col gap-3 sm:flex-row">
-          <form onSubmit={submitSearch} role="search" className="flex flex-1 items-center gap-2 rounded-xl border bg-card p-1.5 shadow-soft focus-within:border-primary">
+        <div className="mt-6 grid max-w-2xl gap-3 sm:grid-cols-[minmax(0,1fr)_14rem]">
+          <form onSubmit={submitSearch} role="search" className="flex min-w-0 items-center gap-2 rounded-xl border bg-card p-1.5 shadow-soft focus-within:border-primary">
             <Search className="ml-2 size-4 shrink-0 text-muted-foreground" />
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cari nama UMKM, kategori, atau lokasi..." aria-label="Cari UMKM di peta" className="h-9 min-w-0 flex-1 bg-transparent px-1 text-sm outline-none placeholder:text-muted-foreground" />
-            <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">Cari</button>
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cari nama UMKM atau lokasi..." aria-label="Cari UMKM di peta" className="h-9 min-w-0 flex-1 bg-transparent px-1 text-sm outline-none placeholder:text-muted-foreground" />
+            <button type="submit" className="min-h-9 shrink-0 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90">Cari</button>
           </form>
-          <div className="sm:w-56">
-          <Select value={search.kec ?? "all"} onValueChange={(v) => navigate({ search: { kec: v === "all" ? undefined : v } })}>
-            <SelectTrigger className="h-11 bg-card" aria-label="Filter kecamatan"><SelectValue placeholder="Semua kecamatan" /></SelectTrigger>
+          <Select value={search.kec ?? "all"} onValueChange={(v) => navigate({ search: { kec: v === "all" ? undefined : v, q: search.q } })}>
+            <SelectTrigger className="h-12 bg-card sm:h-11" aria-label="Filter kecamatan"><SelectValue placeholder="Semua kecamatan" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Semua kecamatan</SelectItem>
               {districts.map((d) => <SelectItem key={d.id} value={d.slug}>{d.name}</SelectItem>)}
             </SelectContent>
           </Select>
-          </div>
         </div>
       </PageHero>
-      <section className="container-page grid gap-6 py-8 lg:grid-cols-[1fr_320px]">
-        <div className="h-[520px] overflow-hidden rounded-3xl border shadow-soft lg:h-[640px]">
+      <section className="container-page grid gap-5 py-6 sm:gap-6 sm:py-8 lg:grid-cols-[1fr_320px]">
+        <div className="h-[360px] overflow-hidden rounded-2xl border shadow-soft sm:h-[520px] sm:rounded-3xl lg:h-[640px]">
           <ClientOnly fallback={<MapFallback />}>
             <Suspense fallback={<MapFallback />}>
               <LeafletMap markers={markers} center={center} zoom={center ? 13 : 10} className="size-full" />
             </Suspense>
           </ClientOnly>
         </div>
-        <aside className="flex max-h-[640px] flex-col rounded-3xl border bg-card shadow-soft">
+        <aside className="flex max-h-[420px] flex-col rounded-2xl border bg-card shadow-soft sm:max-h-[640px] sm:rounded-3xl">
           <div className="border-b p-4">
             <p className="font-semibold">{visible.length} UMKM di peta</p>
             <p className="text-xs text-muted-foreground">{district ? `Kecamatan ${district.name}` : "Seluruh Kabupaten Banyuwangi"}</p>

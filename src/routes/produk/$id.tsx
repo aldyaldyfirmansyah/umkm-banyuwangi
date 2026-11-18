@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ChevronRight, Clock, MapPin, MessageCircle, Package, Phone, Store, Tag, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,8 @@ import { ShareButton } from "@/components/site/ShareButton";
 import { ProductGrid } from "@/components/site/ProductCard";
 import { StoreAvatar } from "@/components/site/StoreCard";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { toast } from "sonner";
 import { formatRupiah, orderMessage, whatsappLink } from "@/lib/format";
 import { productQuery } from "@/lib/queries";
 
@@ -44,6 +46,8 @@ export const Route = createFileRoute("/produk/$id")({
 
 function ProductDetail() {
   const { id } = Route.useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const { data } = useSuspenseQuery(productQuery(id));
   const product = data!.product;
   const related = data!.related;
@@ -61,6 +65,15 @@ function ProductDetail() {
   const waHref = whatsappLink(store.whatsapp, orderMessage(product.product_name, product.price, url));
   const contactHref = whatsappLink(store.whatsapp, `Halo ${store.business_name}, saya ingin bertanya tentang produk ${product.product_name}.`);
   const inStock = product.stock > 0;
+
+  function orderProduct() {
+    if (!user) {
+      toast.error("Silakan masuk terlebih dahulu untuk memesan produk.");
+      navigate({ to: "/auth", search: { mode: "login", redirect: `/produk/${id}` } });
+      return;
+    }
+    window.open(waHref, "_blank", "noopener,noreferrer");
+  }
 
   return (
     <div className="container-page py-8">
@@ -110,8 +123,8 @@ function ProductDetail() {
           </div>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="lg" variant="whatsapp" className="flex-1">
-              <a href={waHref} target="_blank" rel="noreferrer"><MessageCircle /> Pesan Melalui WhatsApp</a>
+            <Button type="button" size="lg" variant="whatsapp" className="flex-1" onClick={orderProduct} disabled={!inStock}>
+              <MessageCircle /> Pesan Melalui WhatsApp
             </Button>
             <Button asChild size="lg" variant="outline" className="flex-1">
               <a href={contactHref} target="_blank" rel="noreferrer"><Phone /> Hubungi Penjual</a>

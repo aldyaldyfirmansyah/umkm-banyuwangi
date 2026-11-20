@@ -90,7 +90,7 @@ function Index() {
             { icon: MapPin, value: `${data.stats.districts}/25`, label: "Kecamatan memiliki UMKM" },
           ].map((s) => (
             <div key={s.label} className="flex items-center gap-4 rounded-2xl p-3">
-              <span className="grid size-12 place-items-center rounded-xl bg-gold/20 text-gold-foreground"><s.icon className="size-6" /></span>
+              <span className="grid size-11 place-items-center rounded-xl bg-gold/20 text-gold-foreground sm:size-12"><s.icon className="size-5 sm:size-6" /></span>
               <div>
                 <p className="font-display text-3xl font-semibold text-primary-deep">{s.value}</p>
                 <p className="text-sm text-muted-foreground">{s.label}</p>
@@ -111,8 +111,8 @@ function Index() {
               search={{ kategori: c.slug }}
               className="group flex flex-col items-center gap-2 rounded-2xl border bg-card p-3 text-center shadow-soft transition-all hover:-translate-y-1 hover:border-primary hover:shadow-lift sm:gap-3 sm:p-5"
             >
-              <span className="grid size-12 place-items-center rounded-xl bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <CategoryIcon name={c.icon} className="size-6" />
+<span className="grid size-11 place-items-center rounded-xl bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground sm:size-12">
+                 <CategoryIcon name={c.icon} className="size-5 sm:size-6" />
               </span>
               <span className="text-sm font-medium leading-tight">{c.name}</span>
               <span className="text-xs text-muted-foreground">{c.product_count} produk</span>
@@ -224,7 +224,7 @@ function Index() {
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {REASONS.map((r) => (
                 <div key={r.title} className="rounded-2xl bg-primary-foreground/10 p-5 backdrop-blur-sm">
-                  <r.icon className="size-7 text-gold" />
+                  <r.icon className="size-6 text-gold sm:size-7" />
                   <h3 className="mt-4 font-sans text-base font-semibold">{r.title}</h3>
                   <p className="mt-1 text-sm opacity-85">{r.text}</p>
                 </div>

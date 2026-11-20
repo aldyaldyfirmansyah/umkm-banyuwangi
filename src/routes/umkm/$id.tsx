@@ -10,6 +10,9 @@ const LeafletMap = lazy(() => import("@/components/site/LeafletMap"));
 import { EmptyState } from "@/components/site/EmptyState";
 import { whatsappLink } from "@/lib/format";
 import { umkmQuery } from "@/lib/queries";
+import { FavoriteButton } from "@/components/site/FavoriteButton";
+import { recordAnalytics, recordVisit } from "@/lib/local-store";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/umkm/$id")({
   loader: async ({ context, params }) => {
@@ -45,6 +48,10 @@ function UmkmDetail() {
   const { id } = Route.useParams();
   const { data } = useSuspenseQuery(umkmQuery(id));
   const { store, products } = data!;
+  useEffect(() => {
+    recordVisit({ id, kind: "umkm", name: store.business_name, href: `/umkm/${id}`, image: store.logo });
+    recordAnalytics("umkm_view", id);
+  }, [id, store.business_name, store.logo]);
   return (
     <>
       <section className="relative overflow-hidden border-b bg-hero">
@@ -53,7 +60,10 @@ function UmkmDetail() {
           <StoreAvatar name={store.business_name} logo={store.logo} size="lg" />
           <div className="flex-1">
             <VerifiedPill verified={store.verification_status === "approved"} />
-            <h1 className="mt-1 text-4xl font-semibold text-primary-deep">{store.business_name}</h1>
+             <div className="mt-1 flex items-start justify-between gap-3">
+               <h1 className="text-4xl font-semibold text-primary-deep">{store.business_name}</h1>
+               <FavoriteButton id={store.id} kind="umkm" name={store.business_name} href={`/umkm/${store.id}`} image={store.logo} compact />
+             </div>
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
               <span className="flex items-center gap-1"><UserRound className="size-4" />{store.owner_name || "-"}</span>
               <span className="flex items-center gap-1"><MapPin className="size-4" />{[store.full_address || store.address, store.village, store.district ? `Kec. ${store.district.name}` : null, "Banyuwangi"].filter(Boolean).join(", ")}</span>
@@ -93,7 +103,7 @@ function UmkmDetail() {
                   </Suspense>
                 </ClientOnly>
               </div>
-              <a href={`https://www.openstreetmap.org/?mlat=${store.latitude}&mlon=${store.longitude}#map=17/${store.latitude}/${store.longitude}`} target="_blank" rel="noreferrer" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">Buka di OpenStreetMap</a>
+              <a href={`https://www.google.com/maps/search/?api=1&query=${store.latitude},${store.longitude}`} target="_blank" rel="noreferrer" className="mt-2 inline-block text-sm font-medium text-primary hover:underline">Buka di Google Maps</a>
             </aside>
           )}
         </div>

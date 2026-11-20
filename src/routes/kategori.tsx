@@ -36,10 +36,10 @@ function KategoriPage() {
                 key={c.id}
                 to="/katalog"
                 search={{ kategori: c.slug }}
-                className="group flex items-start gap-3 rounded-2xl border bg-card p-4 shadow-soft transition-all hover:-translate-y-1 hover:border-primary hover:shadow-lift sm:gap-4 sm:p-6"
+                className="group flex items-start gap-4 rounded-2xl border bg-card p-6 shadow-soft transition-all hover:-translate-y-1 hover:border-primary hover:shadow-lift"
               >
-<span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground sm:size-14">
-                   <CategoryIcon name={c.icon} className="size-6 sm:size-7" />
+                <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <CategoryIcon name={c.icon} className="size-7" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <h2 className="font-sans text-lg font-semibold">{c.name}</h2>

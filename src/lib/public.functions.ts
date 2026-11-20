@@ -145,7 +145,7 @@ export type CatalogSearch = {
   kec?: string;
   min?: number;
   max?: number;
-  urut?: "terbaru" | "termurah" | "termahal" | "populer";
+  urut?: "terbaru" | "termurah" | "termahal" | "populer" | "harga_asc" | "harga_desc" | "terpopuler";
   hal?: number;
 };
 
@@ -175,12 +175,15 @@ export const searchProducts = createServerFn({ method: "GET" })
     if (data.max != null) query = query.lte("price", data.max);
     switch (data.urut) {
       case "termurah":
+      case "harga_asc":
         query = query.order("price", { ascending: true });
         break;
       case "termahal":
+      case "harga_desc":
         query = query.order("price", { ascending: false });
         break;
       case "populer":
+      case "terpopuler":
         query = query.order("views", { ascending: false });
         break;
       default:
@@ -259,22 +262,22 @@ export const getMapPoints = createServerFn({ method: "GET" }).handler(async () =
   const sb = publicClient();
   const { data, error } = await sb
     .from("umkm")
-    .select("id, business_name, logo, full_address, address, village, latitude, longitude, district:districts(name, slug), category:categories(name)")
-    .eq("verification_status", "approved")
-    .not("latitude", "is", null)
-    .not("longitude", "is", null);
+    .select("id, business_name, logo, full_address, address, village, latitude, longitude, district:districts(name, slug, latitude, longitude), category:categories(name)")
+    .eq("verification_status", "approved");
   if (error) throw new Error(error.message);
-  return (data ?? []).map((d) => ({
-    id: d.id,
-    name: d.business_name,
-    logo: d.logo,
-    address: [d.full_address || d.address, d.village].filter(Boolean).join(", "),
-    lat: d.latitude as number,
-    lng: d.longitude as number,
-    district: d.district?.name ?? "",
-    districtSlug: d.district?.slug ?? "",
-    category: d.category?.name ?? "Lainnya",
-  }));
+  return (data ?? [])
+    .map((d) => ({
+      id: d.id,
+      name: d.business_name,
+      logo: d.logo,
+      address: [d.full_address || d.address, d.village].filter(Boolean).join(", "),
+      lat: d.latitude ?? d.district?.latitude,
+      lng: d.longitude ?? d.district?.longitude,
+      district: d.district?.name ?? "",
+      districtSlug: d.district?.slug ?? "",
+      category: d.category?.name ?? "Lainnya",
+    }))
+    .filter((point): point is typeof point & { lat: number; lng: number } => point.lat != null && point.lng != null);
 });
 
 export type MapPoint = Awaited<ReturnType<typeof getMapPoints>>[number];

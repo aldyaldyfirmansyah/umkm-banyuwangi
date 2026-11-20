@@ -12,6 +12,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { formatRupiah, orderMessage, whatsappLink } from "@/lib/format";
 import { productQuery } from "@/lib/queries";
+import { FavoriteButton } from "@/components/site/FavoriteButton";
+import { recordAnalytics, recordVisit } from "@/lib/local-store";
+import { InquiryButton } from "@/components/site/InquiryButton";
 
 export const Route = createFileRoute("/produk/$id")({
   loader: async ({ context, params }) => {
@@ -59,8 +62,10 @@ function ProductDetail() {
   useEffect(() => {
     setActive(0);
     setUrl(window.location.href);
+    recordVisit({ id, kind: "product", name: product.product_name, href: `/produk/${id}`, image: product.image });
+    recordAnalytics("product_view", id);
     supabase.rpc("increment_product_view", { _product_id: id }).then(() => undefined);
-  }, [id]);
+  }, [id, product.product_name, product.image]);
 
   const waHref = whatsappLink(store.whatsapp, orderMessage(product.product_name, product.price, url));
   const contactHref = whatsappLink(store.whatsapp, `Halo ${store.business_name}, saya ingin bertanya tentang produk ${product.product_name}.`);
@@ -72,6 +77,7 @@ function ProductDetail() {
       navigate({ to: "/auth", search: { mode: "login", redirect: `/produk/${id}` } });
       return;
     }
+    recordAnalytics("whatsapp_click", id);
     window.open(waHref, "_blank", "noopener,noreferrer");
   }
 
@@ -111,7 +117,10 @@ function ProductDetail() {
 
         <div className="flex flex-col">
           {product.category && <Badge variant="soft" className="w-fit"><Tag className="mr-1 size-3" />{product.category.name}</Badge>}
-          <h1 className="mt-3 text-3xl font-semibold leading-tight text-primary-deep sm:text-4xl">{product.product_name}</h1>
+           <div className="mt-3 flex items-start justify-between gap-3">
+             <h1 className="text-3xl font-semibold leading-tight text-primary-deep sm:text-4xl">{product.product_name}</h1>
+             <FavoriteButton id={product.id} kind="product" name={product.product_name} href={`/produk/${product.id}`} image={product.image} compact />
+           </div>
           <p className="mt-4 font-display text-3xl font-semibold text-primary">{formatRupiah(product.price)}</p>
           <div className="mt-3 flex items-center gap-3 text-sm">
             {inStock ? (
@@ -130,7 +139,10 @@ function ProductDetail() {
               <a href={contactHref} target="_blank" rel="noreferrer"><Phone /> Hubungi Penjual</a>
             </Button>
           </div>
-          <div className="mt-3"><ShareButton title={product.product_name} text={`Lihat ${product.product_name} di UMKM BANYUWANGI`} /></div>
+           <div className="mt-3"><ShareButton title={product.product_name} text={`Lihat ${product.product_name} di UMKM BANYUWANGI`} /></div>
+           <div className="mt-3">
+             <InquiryButton item={{ productId: product.id, name: product.product_name, price: product.price, image: product.image, storeId: store.id, storeName: store.business_name, storeWhatsapp: store.whatsapp, qty: 1, note: "" }} />
+           </div>
 
           <div className="mt-8">
             <h2 className="font-sans text-lg font-semibold">Deskripsi produk</h2>

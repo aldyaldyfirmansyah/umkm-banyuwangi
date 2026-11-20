@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Store } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/components/site/FavoriteButton";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatRupiah } from "@/lib/format";
@@ -37,6 +38,9 @@ export function ProductCard({ product }: { product: ProductCardData }) {
             Stok habis
           </Badge>
         )}
+        <span className="absolute bottom-3 right-3">
+          <FavoriteButton id={product.id} kind="product" name={product.product_name} href={`/produk/${product.id}`} image={product.image} compact />
+        </span>
       </Link>
       <div className="flex flex-1 flex-col gap-1.5 p-3 sm:gap-2 sm:p-4">
         <Link to="/produk/$id" params={{ id: product.id }} className="line-clamp-2 font-semibold leading-snug hover:text-primary">

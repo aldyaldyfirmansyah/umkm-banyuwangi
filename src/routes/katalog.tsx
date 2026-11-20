@@ -14,7 +14,7 @@ import { EmptyState } from "@/components/site/EmptyState";
 import { catalogCategoryCountsQuery, catalogQuery, categoriesQuery, districtsQuery } from "@/lib/queries";
 import { PAGE_SIZE, type CatalogSearch } from "@/lib/public.functions";
 
-const SORTS = ["terbaru", "termurah", "termahal", "populer"] as const;
+const SORTS = ["terbaru", "termurah", "termahal", "populer", "harga_asc", "harga_desc", "terpopuler"] as const;
 
 function toNum(v: unknown): number | undefined {
   const n = Number(v);
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/katalog")({
     kec: typeof s.kec === "string" && s.kec ? s.kec : undefined,
     min: toNum(s.min),
     max: toNum(s.max),
-    urut: SORTS.includes(s.urut as (typeof SORTS)[number]) ? (s.urut as CatalogSearch["urut"]) : undefined,
+    urut: SORTS.includes((s.urut ?? s.sort) as (typeof SORTS)[number]) ? ((s.urut ?? s.sort) as CatalogSearch["urut"]) : undefined,
     hal: toNum(s.hal) ? Math.floor(toNum(s.hal)!) : undefined,
   }),
   head: () => ({

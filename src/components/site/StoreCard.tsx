@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { BadgeCheck, Clock, MapPin, Package, Tag } from "lucide-react";
 import { initials } from "@/lib/format";
+import { TrustBadges } from "@/components/site/TrustBadges";
 import type { StoreCard as StoreCardData } from "@/lib/public.functions";
 
 export function StoreAvatar({ name, logo, size = "md" }: { name: string; logo: string | null; size?: "md" | "lg" }) {
@@ -40,7 +41,7 @@ export function StoreCard({ store }: { store: StoreCardData }) {
           <p className="flex items-center gap-1 text-xs text-muted-foreground">
             <MapPin className="size-3.5" /> {store.district ? `Kec. ${store.district}` : store.city}
           </p>
-          <div className="mt-1"><VerifiedPill verified={store.verified} /></div>
+           <div className="mt-1"><TrustBadges verified={store.verified} compact /></div>
         </div>
       </div>
       <p className="line-clamp-2 text-sm text-muted-foreground">{store.description || "Belum ada deskripsi usaha."}</p>

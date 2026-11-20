@@ -5,17 +5,19 @@ import { MapPin, Search, Store } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageHero } from "@/components/site/SectionHeading";
 import { EmptyState } from "@/components/site/EmptyState";
-import { districtsQuery, mapPointsQuery } from "@/lib/queries";
+import { categoriesQuery, districtsQuery, mapPointsQuery } from "@/lib/queries";
 import { escapeHtml } from "@/lib/html";
 
 const LeafletMap = lazy(() => import("@/components/site/LeafletMap"));
 
-type S = { kec?: string; q?: string };
+type S = { kec?: string; q?: string; kategori?: string };
+const BANYUWANGI_CENTER: [number, number] = [-8.2192, 114.3691];
 
 export const Route = createFileRoute("/peta")({
   validateSearch: (s: Record<string, unknown>): S => ({
-    kec: typeof s.kec === "string" && s.kec ? s.kec : undefined,
-    q: typeof s.q === "string" && s.q ? s.q : undefined,
+    ...(typeof s["kec"] === "string" && s["kec"] ? { kec: s["kec"] } : {}),
+    ...(typeof s["q"] === "string" && s["q"] ? { q: s["q"].slice(0, 100) } : {}),
+    ...(typeof s["kategori"] === "string" && s["kategori"] ? { kategori: s["kategori"] } : {}),
   }),
   head: () => ({
     meta: [
@@ -31,6 +33,7 @@ export const Route = createFileRoute("/peta")({
     await Promise.all([
       context.queryClient.ensureQueryData(mapPointsQuery()),
       context.queryClient.ensureQueryData(districtsQuery()),
+      context.queryClient.ensureQueryData(categoriesQuery()),
     ]);
   },
   component: PetaPage,
@@ -45,20 +48,22 @@ function PetaPage() {
   const navigate = useNavigate({ from: "/peta" });
   const { data: points } = useSuspenseQuery(mapPointsQuery());
   const { data: districts } = useSuspenseQuery(districtsQuery());
+  const { data: categories } = useSuspenseQuery(categoriesQuery());
   const [query, setQuery] = useState(search.q ?? "");
   const district = districts.find((d) => d.slug === search.kec);
   const visible = useMemo(() => {
     const keyword = (search.q ?? "").toLowerCase();
     return points.filter((p) => {
       const matchesDistrict = !search.kec || p.districtSlug === search.kec;
-      const matchesQuery = !keyword || [p.name, p.category, p.district, p.address].some((value) => value.toLowerCase().includes(keyword));
-      return matchesDistrict && matchesQuery;
+       const matchesCategory = !search.kategori || p.category.toLowerCase() === categories.find((category) => category.slug === search.kategori)?.name.toLowerCase();
+       const matchesQuery = !keyword || [p.name, p.category, p.district, p.address].some((value) => value.toLowerCase().includes(keyword));
+       return matchesDistrict && matchesCategory && matchesQuery;
     });
-  }, [points, search.kec, search.q]);
+  }, [categories, points, search.kategori, search.kec, search.q]);
 
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    navigate({ search: { kec: search.kec, q: query.trim() || undefined } });
+     navigate({ search: { ...(search.kec ? { kec: search.kec } : {}), ...(search.kategori ? { kategori: search.kategori } : {}), ...(query.trim() ? { q: query.trim() } : {}) } });
   }
   const markers = useMemo(
     () =>
@@ -70,7 +75,7 @@ function PetaPage() {
       })),
     [visible],
   );
-  const center: [number, number] | undefined = district?.latitude && district.longitude ? [district.latitude, district.longitude] : undefined;
+  const center: [number, number] = district?.latitude && district.longitude ? [district.latitude, district.longitude] : BANYUWANGI_CENTER;
 
   return (
     <>
@@ -81,20 +86,27 @@ function PetaPage() {
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cari nama UMKM atau lokasi..." aria-label="Cari UMKM di peta" className="h-9 min-w-0 flex-1 bg-transparent px-1 text-sm outline-none placeholder:text-muted-foreground" />
             <button type="submit" className="min-h-9 shrink-0 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90">Cari</button>
           </form>
-          <Select value={search.kec ?? "all"} onValueChange={(v) => navigate({ search: { kec: v === "all" ? undefined : v, q: search.q } })}>
+           <Select value={search.kec ?? "all"} onValueChange={(v) => navigate({ search: { ...(v !== "all" ? { kec: v } : {}), ...(search.kategori ? { kategori: search.kategori } : {}), ...(search.q ? { q: search.q } : {}) } })}>
             <SelectTrigger className="h-12 bg-card sm:h-11" aria-label="Filter kecamatan"><SelectValue placeholder="Semua kecamatan" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Semua kecamatan</SelectItem>
               {districts.map((d) => <SelectItem key={d.id} value={d.slug}>{d.name}</SelectItem>)}
             </SelectContent>
-          </Select>
-        </div>
-      </PageHero>
+           </Select>
+           <Select value={search.kategori ?? "all"} onValueChange={(v) => navigate({ search: { ...(search.kec ? { kec: search.kec } : {}), ...(v !== "all" ? { kategori: v } : {}), ...(search.q ? { q: search.q } : {}) } })}>
+             <SelectTrigger className="h-12 bg-card sm:h-11" aria-label="Filter kategori"><SelectValue placeholder="Semua kategori" /></SelectTrigger>
+             <SelectContent>
+               <SelectItem value="all">Semua kategori</SelectItem>
+               {categories.map((category) => <SelectItem key={category.id} value={category.slug}>{category.name}</SelectItem>)}
+             </SelectContent>
+           </Select>
+         </div>
+       </PageHero>
       <section className="container-page grid gap-5 py-6 sm:gap-6 sm:py-8 lg:grid-cols-[1fr_320px]">
         <div className="h-[360px] overflow-hidden rounded-2xl border shadow-soft sm:h-[520px] sm:rounded-3xl lg:h-[640px]">
           <ClientOnly fallback={<MapFallback />}>
             <Suspense fallback={<MapFallback />}>
-              <LeafletMap markers={markers} center={center} zoom={center ? 13 : 10} className="size-full" />
+              <LeafletMap markers={markers} center={center} zoom={district ? 13 : 10} className="size-full" />
             </Suspense>
           </ClientOnly>
         </div>

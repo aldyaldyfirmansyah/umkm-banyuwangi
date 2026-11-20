@@ -12,11 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as FavoritRouteImport } from './routes/favorit'
 import { Route as KatalogRouteImport } from './routes/katalog'
 import { Route as KategoriRouteImport } from './routes/kategori'
+import { Route as KoleksiRouteImport } from './routes/koleksi'
 import { Route as KontakRouteImport } from './routes/kontak'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
+import { Route as PertanyaanRouteImport } from './routes/pertanyaan'
 import { Route as PetaRouteImport } from './routes/peta'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TentangRouteImport } from './routes/tentang'
@@ -53,6 +56,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FavoritRoute = FavoritRouteImport.update({
+  id: '/favorit',
+  path: '/favorit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KatalogRoute = KatalogRouteImport.update({
   id: '/katalog',
   path: '/katalog',
@@ -61,6 +69,11 @@ const KatalogRoute = KatalogRouteImport.update({
 const KategoriRoute = KategoriRouteImport.update({
   id: '/kategori',
   path: '/kategori',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KoleksiRoute = KoleksiRouteImport.update({
+  id: '/koleksi',
+  path: '/koleksi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KontakRoute = KontakRouteImport.update({
@@ -76,6 +89,11 @@ const LoginRoute = LoginRouteImport.update({
 const LupaPasswordRoute = LupaPasswordRouteImport.update({
   id: '/lupa-password',
   path: '/lupa-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PertanyaanRoute = PertanyaanRouteImport.update({
+  id: '/pertanyaan',
+  path: '/pertanyaan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PetaRoute = PetaRouteImport.update({
@@ -194,11 +212,14 @@ const AuthenticatedTokoProfilRoute = AuthenticatedTokoProfilRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/favorit': typeof FavoritRoute
   '/katalog': typeof KatalogRoute
   '/kategori': typeof KategoriRoute
+  '/koleksi': typeof KoleksiRoute
   '/kontak': typeof KontakRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
+  '/pertanyaan': typeof PertanyaanRoute
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
@@ -224,11 +245,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/favorit': typeof FavoritRoute
   '/katalog': typeof KatalogRoute
   '/kategori': typeof KategoriRoute
+  '/koleksi': typeof KoleksiRoute
   '/kontak': typeof KontakRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
+  '/pertanyaan': typeof PertanyaanRoute
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
@@ -254,11 +278,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/favorit': typeof FavoritRoute
   '/katalog': typeof KatalogRoute
   '/kategori': typeof KategoriRoute
+  '/koleksi': typeof KoleksiRoute
   '/kontak': typeof KontakRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
+  '/pertanyaan': typeof PertanyaanRoute
   '/peta': typeof PetaRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tentang': typeof TentangRoute
@@ -286,11 +313,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/favorit'
     | '/katalog'
     | '/kategori'
+    | '/koleksi'
     | '/kontak'
     | '/login'
     | '/lupa-password'
+    | '/pertanyaan'
     | '/peta'
     | '/reset-password'
     | '/tentang'
@@ -316,11 +346,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/favorit'
     | '/katalog'
     | '/kategori'
+    | '/koleksi'
     | '/kontak'
     | '/login'
     | '/lupa-password'
+    | '/pertanyaan'
     | '/peta'
     | '/reset-password'
     | '/tentang'
@@ -345,11 +378,14 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/favorit'
     | '/katalog'
     | '/kategori'
+    | '/koleksi'
     | '/kontak'
     | '/login'
     | '/lupa-password'
+    | '/pertanyaan'
     | '/peta'
     | '/reset-password'
     | '/tentang'
@@ -377,11 +413,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  FavoritRoute: typeof FavoritRoute
   KatalogRoute: typeof KatalogRoute
   KategoriRoute: typeof KategoriRoute
+  KoleksiRoute: typeof KoleksiRoute
   KontakRoute: typeof KontakRoute
   LoginRoute: typeof LoginRoute
   LupaPasswordRoute: typeof LupaPasswordRoute
+  PertanyaanRoute: typeof PertanyaanRoute
   PetaRoute: typeof PetaRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TentangRoute: typeof TentangRoute
@@ -413,6 +452,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/favorit': {
+      id: '/favorit'
+      path: '/favorit'
+      fullPath: '/favorit'
+      preLoaderRoute: typeof FavoritRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/katalog': {
       id: '/katalog'
       path: '/katalog'
@@ -425,6 +471,13 @@ declare module '@tanstack/react-router' {
       path: '/kategori'
       fullPath: '/kategori'
       preLoaderRoute: typeof KategoriRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/koleksi': {
+      id: '/koleksi'
+      path: '/koleksi'
+      fullPath: '/koleksi'
+      preLoaderRoute: typeof KoleksiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kontak': {
@@ -446,6 +499,13 @@ declare module '@tanstack/react-router' {
       path: '/lupa-password'
       fullPath: '/lupa-password'
       preLoaderRoute: typeof LupaPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pertanyaan': {
+      id: '/pertanyaan'
+      path: '/pertanyaan'
+      fullPath: '/pertanyaan'
+      preLoaderRoute: typeof PertanyaanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/peta': {
@@ -659,11 +719,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  FavoritRoute: FavoritRoute,
   KatalogRoute: KatalogRoute,
   KategoriRoute: KategoriRoute,
+  KoleksiRoute: KoleksiRoute,
   KontakRoute: KontakRoute,
   LoginRoute: LoginRoute,
   LupaPasswordRoute: LupaPasswordRoute,
+  PertanyaanRoute: PertanyaanRoute,
   PetaRoute: PetaRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TentangRoute: TentangRoute,

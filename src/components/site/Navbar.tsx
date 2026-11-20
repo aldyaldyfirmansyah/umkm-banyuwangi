@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, LogOut, Menu, ShieldCheck, Store, UserRound } from "lucide-react";
+import { Heart, LayoutDashboard, LogOut, Menu, MessageCircle, MoreHorizontal, ShieldCheck, Store, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,12 +17,10 @@ import { Logo } from "./Logo";
 
 const NAV = [
   { to: "/", label: "Beranda" },
-  { to: "/katalog", label: "Katalog Produk" },
+  { to: "/katalog", label: "Katalog" },
   { to: "/kategori", label: "Kategori" },
-  { to: "/umkm", label: "Direktori UMKM" },
-  { to: "/peta", label: "Peta UMKM" },
-  { to: "/tentang", label: "Tentang" },
-  { to: "/kontak", label: "Kontak" },
+  { to: "/umkm", label: "UMKM" },
+  { to: "/koleksi", label: "Koleksi" },
 ] as const;
 
 export function Navbar() {
@@ -47,6 +45,20 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
+        <div className="hidden items-center gap-1 lg:flex">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Menu lainnya"><MoreHorizontal /></Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => navigate({ to: "/favorit" })}><Heart /> Favorit</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate({ to: "/pertanyaan" })}><MessageCircle /> Pertanyaan</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate({ to: "/peta" })}><Store /> Peta UMKM</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate({ to: "/tentang" })}>Tentang</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate({ to: "/kontak" })}>Kontak</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <div className="flex items-center gap-2">
           {ready && user ? (
             <DropdownMenu>
@@ -118,6 +130,12 @@ export function Navbar() {
                   </Link>
                 ))}
                 <div className="my-3 h-px bg-border" />
+                <div className="grid grid-cols-2 gap-1">
+                  <Link to="/favorit" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm hover:bg-muted">Favorit</Link>
+                  <Link to="/pertanyaan" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm hover:bg-muted">Pertanyaan</Link>
+                  <Link to="/peta" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm hover:bg-muted">Peta UMKM</Link>
+                  <Link to="/kontak" onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-sm hover:bg-muted">Kontak</Link>
+                </div>
                 {user ? (
                   <>
                     <Link to="/dashboard" onClick={() => setOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm hover:bg-muted">

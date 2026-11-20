@@ -38,11 +38,11 @@ export function ProductCard({ product }: { product: ProductCardData }) {
           </Badge>
         )}
       </Link>
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-1 flex-col gap-1.5 p-3 sm:gap-2 sm:p-4">
         <Link to="/produk/$id" params={{ id: product.id }} className="line-clamp-2 font-semibold leading-snug hover:text-primary">
           {product.product_name}
         </Link>
-        <p className="font-display text-lg font-semibold text-primary">{formatRupiah(product.price)}</p>
+        <p className="font-display text-base font-semibold text-primary sm:text-lg">{formatRupiah(product.price)}</p>
         <div className="mt-auto space-y-1 text-xs text-muted-foreground">
           <p className="flex items-center gap-1.5 truncate">
             <Store className="size-3.5 shrink-0" />

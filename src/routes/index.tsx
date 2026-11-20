@@ -47,24 +47,24 @@ function Index() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-hero">
         <div className="gajah-oling absolute inset-y-0 right-0 hidden w-1/3 opacity-[0.07] lg:block" aria-hidden />
-        <div className="container-page relative grid items-center gap-10 py-14 md:py-20 lg:grid-cols-2">
+        <div className="container-page relative grid items-center gap-8 py-10 sm:gap-10 sm:py-14 md:py-20 lg:grid-cols-2">
           <div className="animate-rise">
             <span className="inline-flex items-center gap-2 rounded-full border bg-card/80 px-3 py-1 text-xs font-medium text-primary-deep shadow-soft">
               <MapPin className="size-4 text-gold-foreground" /> Kabupaten Banyuwangi, Jawa Timur
             </span>
-            <h1 className="mt-5 text-4xl font-semibold leading-[1.08] text-primary-deep sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 text-3xl font-semibold leading-[1.08] text-primary-deep sm:mt-5 sm:text-5xl lg:text-6xl">
               Satu Platform, <span className="italic text-primary">Ribuan Potensi</span> UMKM Banyuwangi
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-muted-foreground">
+            <p className="mt-4 max-w-xl text-base text-muted-foreground sm:mt-5 sm:text-lg">
               Pusat informasi, direktori, promosi, dan katalog produk UMKM dari 25 kecamatan di Bumi Blambangan.
             </p>
-            <SearchBar large className="mt-7 max-w-xl" />
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild size="lg" variant="hero">
+             <SearchBar large className="mt-6 max-w-xl" />
+             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+               <Button asChild size="lg" variant="hero" className="w-full sm:w-auto">
                 <Link to="/umkm">Jelajahi UMKM <ArrowRight /></Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/peta"><Map /> Lihat Peta</Link>
+               <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
+                 <Link to="/peta"><Map /> Lihat Peta</Link>
               </Button>
             </div>
           </div>
@@ -109,7 +109,7 @@ function Index() {
               key={c.id}
               to="/katalog"
               search={{ kategori: c.slug }}
-              className="group flex flex-col items-center gap-3 rounded-2xl border bg-card p-5 text-center shadow-soft transition-all hover:-translate-y-1 hover:border-primary hover:shadow-lift"
+              className="group flex flex-col items-center gap-2 rounded-2xl border bg-card p-3 text-center shadow-soft transition-all hover:-translate-y-1 hover:border-primary hover:shadow-lift sm:gap-3 sm:p-5"
             >
               <span className="grid size-12 place-items-center rounded-xl bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                 <CategoryIcon name={c.icon} className="size-6" />
@@ -125,12 +125,12 @@ function Index() {
       {banner && (
         <section className="container-page pb-16">
           <Link to={(banner.link as "/katalog") || "/katalog"} className="group relative block overflow-hidden rounded-[2rem] shadow-lift">
-            <img src={banner.image || "/images/banner-banyuwangi.jpg"} alt={banner.title} loading="lazy" width={1920} height={800} className="aspect-[16/9] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:aspect-[12/5]" />
+            <img src={banner.image || "/images/banner-banyuwangi.jpg"} alt={banner.title} loading="lazy" width={1920} height={800} className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:aspect-[12/5]" />
             <div className="absolute inset-0 bg-gradient-to-r from-primary-deep/85 via-primary-deep/40 to-transparent" />
-            <div className="absolute inset-0 flex flex-col justify-center p-6 text-primary-foreground sm:p-12">
+            <div className="absolute inset-0 flex flex-col justify-center p-5 text-primary-foreground sm:p-12">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Potensi Banyuwangi</p>
-              <h2 className="mt-2 max-w-lg text-3xl font-semibold sm:text-5xl">{banner.title}</h2>
-              {banner.description && <p className="mt-3 max-w-md opacity-90">{banner.description}</p>}
+               <h2 className="mt-2 max-w-lg text-2xl font-semibold sm:text-5xl">{banner.title}</h2>
+               {banner.description && <p className="mt-3 hidden max-w-md opacity-90 sm:block">{banner.description}</p>}
               <span className="mt-6 inline-flex w-fit items-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground">Jelajahi sekarang <ArrowRight className="size-4" /></span>
             </div>
           </Link>

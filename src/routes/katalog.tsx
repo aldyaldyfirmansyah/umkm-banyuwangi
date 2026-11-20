@@ -169,23 +169,23 @@ function Katalog() {
           </div>
         </aside>
         <div>
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">
               Menampilkan <span className="font-semibold text-foreground">{items.length}</span> dari {total} produk
               {isFetching && <Loader2 className="ml-2 inline size-4 animate-spin" />}
             </p>
-            <div className="flex items-center gap-2">
+              <div className="flex w-full items-center gap-2 sm:w-auto">
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger asChild>
                   <Button variant="outline" className="lg:hidden"><SlidersHorizontal /> Filter</Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-80 overflow-y-auto">
+                <SheetContent side="left" className="w-[min(20rem,86vw)] overflow-y-auto">
                   <SheetHeader><SheetTitle>Filter produk</SheetTitle></SheetHeader>
                   <div className="px-4 pb-6"><Filters search={search} onDone={() => setSheetOpen(false)} /></div>
                 </SheetContent>
               </Sheet>
               <Select value={search.urut ?? "terbaru"} onValueChange={(v) => navigate({ search: (prev) => ({ ...prev, urut: v as CatalogSearch["urut"], hal: undefined }) })}>
-                <SelectTrigger className="w-44" aria-label="Urutkan"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-full sm:w-44" aria-label="Urutkan"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="terbaru">Terbaru</SelectItem>
                   <SelectItem value="termurah">Harga termurah</SelectItem>

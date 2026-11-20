@@ -106,7 +106,7 @@ export function ProductForm({
             </Select>
             {errors.category_id && <p className="text-xs text-destructive">{errors.category_id}</p>}
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="pf-price">Harga (Rp)</Label>
               <Input id="pf-price" inputMode="numeric" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: e.target.value.replace(/[^\d]/g, "") }))} aria-invalid={!!errors.price} />
@@ -122,7 +122,7 @@ export function ProductForm({
       </div>
       <div className="space-y-2">
         <Label>Foto tambahan (maks. 4)</Label>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {extra.map((img, i) => (
             <ImageUpload key={img} value={img} folder="products" onChange={(v) => setExtra((arr) => (v ? arr.map((x, j) => (j === i ? v : x)) : arr.filter((_, j) => j !== i)))} />
           ))}
